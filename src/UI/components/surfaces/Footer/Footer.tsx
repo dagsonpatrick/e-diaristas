@@ -10,6 +10,7 @@ import {
   FooterSocialList,
   SocialButton,
 } from "./Footer.style";
+
 const Footer = () => {
   return (
     <FooterContainer>
