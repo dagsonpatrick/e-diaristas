@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseUrl = "https://ediaristas-api-php.herokuapp.com";
+const baseUrl = process.env.NEXT_PUBLIC_API;
 
 export const ApiService = axios.create({
   baseURL: baseUrl,
