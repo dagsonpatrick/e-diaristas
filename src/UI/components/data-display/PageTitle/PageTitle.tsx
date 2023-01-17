@@ -6,7 +6,7 @@ import {
 
 export interface PageTitleProps {
   title: string;
-  subtitle?: string;
+  subtitle?: string | JSX.Element;
 }
 
 const PageTitle: React.FC<PageTitleProps> = ({ title, subtitle }) => {
