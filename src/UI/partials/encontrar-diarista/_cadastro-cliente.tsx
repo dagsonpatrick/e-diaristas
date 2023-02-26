@@ -14,7 +14,7 @@ const CadastroCliente: React.FC<{ onBack: () => void }> = ({ onBack }) => {
   return (
     <div>
       <Typography sx={{ fontWeight: "bold", pb: 2 }}>Dados pessoais</Typography>
-      <UserDataForm />
+      <UserDataForm cadastro={true} />
       <Divider sx={{ mb: 5 }} />
 
       <Typography sx={{ fontWeight: "bold", pb: 2 }}>

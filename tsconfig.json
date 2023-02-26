@@ -16,7 +16,7 @@
     "jsx": "preserve",
     "incremental": true,
     "paths": {
-      "@partials/*": ["UI/partials/*"],
+      "@patials/*": ["UI/partials/*"],
       "@styles/*": ["UI/styles/*"]
     }
   },

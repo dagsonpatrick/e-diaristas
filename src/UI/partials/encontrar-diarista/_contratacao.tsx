@@ -1,9 +1,19 @@
-import { Box, Button, Paper, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Paper,
+  Typography,
+} from "@mui/material";
+import { Container } from "@mui/system";
 import { spawn } from "child_process";
 import useContratacao from "data/hooks/pages/useContratacao.page";
 import useIsMobile from "data/hooks/useIsMobile";
-import React, { PropsWithChildren } from "react";
+import { BrawserService } from "data/services/BrawserService";
+import { TextFormatService } from "data/services/TextFormatService";
+import React, { PropsWithChildren, useEffect } from "react";
 import { FormProvider } from "react-hook-form";
+import DataList from "UI/components/data-display/DataList/DataList";
 import PageTitle from "UI/components/data-display/PageTitle/PageTitle";
 import SideInformation from "UI/components/data-display/SideInformation/SideInformation";
 import SafeEnvironment from "UI/components/feedback/SafeEnvironment/SafeEnvironment";
@@ -36,8 +46,26 @@ const Contratacao: React.FC<PropsWithChildren> = () => {
     loginError,
     paymentForm,
     onPaymentFormSubmit,
+    tamanhoCasa,
+    tipoLimpeza,
+    totalPrice,
+    podemosAtender,
   } = useContratacao();
-  const isMobile = useIsMobile();
+  const isMobile = useIsMobile(),
+    dataAtendimento = serviceForm.watch("faxina.data_atendimento");
+
+  useEffect(() => {
+    BrawserService.scrollToTop();
+  }, [step]);
+
+  if (!servicos || servicos.length < 1) {
+    return (
+      <Container sx={{ textAlign: "center", my: 10 }}>
+        <CircularProgress />
+      </Container>
+    );
+  }
+
   return (
     <div>
       {!isMobile && <SafeEnvironment />}
@@ -45,6 +73,26 @@ const Contratacao: React.FC<PropsWithChildren> = () => {
         selected={breadcrumbItems[step - 1]}
         items={breadcrumbItems}
       />
+      {isMobile && [2, 3].includes(step) && (
+        <DataList
+          header={
+            <Typography color={"primary"} sx={{ fontWeight: "thin" }}>
+              O valor total do serviço é:{" "}
+              {TextFormatService.currency(totalPrice)}
+            </Typography>
+          }
+          body={
+            <>
+              {tipoLimpeza?.nome}
+              <br />
+              Tamanho: {tamanhoCasa.join(", ")}
+              <br />
+              Data: {dataAtendimento}
+            </>
+          }
+        />
+      )}
+
       {step === 1 && <PageTitle title="Nos conte um pouco sobre o serviço!" />}
 
       {step === 2 && (
@@ -77,13 +125,17 @@ const Contratacao: React.FC<PropsWithChildren> = () => {
 
       <UserFormContainer>
         <PageFormContainer fullWidth={step === 4}>
-          <Paper>
+          <Paper sx={{ p: 4 }}>
             <FormProvider {...serviceForm}>
               <form
                 onSubmit={serviceForm.handleSubmit(onServiceFormSubmit)}
                 hidden={step !== 1}
               >
-                <DetalheServico servicos={servicos} />
+                <DetalheServico
+                  servicos={servicos}
+                  podemosAtender={podemosAtender}
+                  comodos={tamanhoCasa.length}
+                />
               </form>
             </FormProvider>
 
@@ -159,22 +211,22 @@ const Contratacao: React.FC<PropsWithChildren> = () => {
               items={[
                 {
                   title: "Tipo",
-                  descricao: [""],
+                  descricao: [tipoLimpeza?.nome],
                   icon: "twf-check-circle",
                 },
                 {
                   title: "Tamanho",
-                  descricao: [""],
+                  descricao: tamanhoCasa,
                   icon: "twf-check-circle",
                 },
                 {
                   title: "Data",
-                  descricao: [""],
+                  descricao: [dataAtendimento as string],
                   icon: "twf-check-circle",
                 },
               ]}
               footer={{
-                text: "R$80,00",
+                text: TextFormatService.currency(totalPrice),
                 icon: "twf-credit-card",
               }}
             />

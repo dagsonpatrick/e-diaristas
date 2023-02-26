@@ -17,7 +17,7 @@ interface DetalheServicoProps {
   podemosAtender?: boolean;
 }
 
-const houseParts = [
+export const houseParts = [
   {
     singular: "Cozinha",
     plural: "Cozinhas",
@@ -149,7 +149,7 @@ const DetalheServico: React.FC<DetalheServicoProps> = ({
               <div>
                 <TextFieldMask
                   {...inputProps}
-                  inputProps={{ readOnly: true, disable: true }}
+                  inputProps={{ readOnly: true, disable: "true" }}
                   inputRef={ref}
                   mask={"99:99"}
                   label={"Hora Término"}

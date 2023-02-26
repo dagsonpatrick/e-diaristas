@@ -21,3 +21,4 @@ export * from "./forms/NewContactForm";
 export * from "./forms/PaymentForm";
 export * from "./forms/PictureForm";
 export * from "./forms/UserDataForm";
+export * from "./forms/FiancialForm";

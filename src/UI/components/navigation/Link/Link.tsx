@@ -12,6 +12,7 @@ export interface LinkProps {
   mui?: MuiLinkProps | ButtonProps;
   next?: NextLinkProps;
   Component?: React.ElementType;
+  onClick?: () => void;
 }
 
 const Link: React.FC<PropsWithChildren<LinkProps>> = ({

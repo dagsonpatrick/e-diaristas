@@ -1,3 +1,5 @@
+import { CidadeInterface } from "../EnderecoInterface";
+
 export type FormValues = {
   usuario: {
     email: string;
@@ -7,6 +9,7 @@ export type FormValues = {
     nascimento: string;
     cpf: string;
     telefone: string;
+    chave_pix?: string;
   };
 
   pagamento: {
@@ -41,4 +44,6 @@ export type FormValues = {
     email: string;
     password: string;
   };
+
+  enderecosAtendidos: CidadeInterface[];
 };
