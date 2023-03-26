@@ -12,6 +12,11 @@ import Table, {
   TableRow,
 } from "UI/components/data-display/Table/Table";
 import Link from "UI/components/navigation/Link/Link";
+import {
+  CancelDialog,
+  ConfirmDialog,
+  RatingDialog,
+} from "./_minhas-diarias-dialogs";
 
 // import { Component } from './_minhas-diarias.styled';
 
@@ -27,6 +32,15 @@ const MinhasDiarias: React.FC<PropsWithChildren> = () => {
     podeCancelar,
     podeConfirmar,
     podeAvaliar,
+    diariaConfirmar,
+    setDariaConfirmar,
+    confirmarDiaria,
+    diariaAvaliar,
+    setDiairaAvaliar,
+    avaliarDiaria,
+    diariaCancelar,
+    setDiariaCancelar,
+    cancelarDiaria,
   } = useMinhasDiarias();
   return (
     <Container sx={{ mb: 5, p: 0 }}>
@@ -34,51 +48,63 @@ const MinhasDiarias: React.FC<PropsWithChildren> = () => {
       {filteredData.length > 0 ? (
         isMobile ? (
           <>
-            {filteredData.map((item) => {
+            {filteredData.map((diaria) => {
               return (
                 <DataList
-                  key={item.id}
+                  key={diaria.id}
                   header={
                     <>
                       Data:
                       {TextFormatService.reverseDate(
-                        item.data_atendimento as string
+                        diaria.data_atendimento as string
                       )}
                       <br />
-                      {item.nome_servico}
+                      {diaria.nome_servico}
                     </>
                   }
                   body={
                     <>
-                      Status: {DiariaService.getStatus(item.status!).label}
+                      Status: {DiariaService.getStatus(diaria.status!).label}
                       <br />
-                      Valor: {TextFormatService.currency(item.preco)}
+                      Valor: {TextFormatService.currency(diaria.preco)}
                     </>
                   }
                   actions={
                     <>
-                      {podeVisualizar(item) && (
+                      {podeVisualizar(diaria) && (
                         <Button
                           component={Link}
-                          href={`?id=${item.id}`}
+                          href={`?id=${diaria.id}`}
                           color={"inherit"}
                           variant={"outlined"}
                         >
                           Detalhes
                         </Button>
                       )}
-                      {podeCancelar(item) && (
-                        <Button color={"error"} variant={"contained"}>
+                      {podeCancelar(diaria) && (
+                        <Button
+                          color={"error"}
+                          variant={"contained"}
+                          onClick={() => setDiariaCancelar(diaria)}
+                        >
                           Cancelado
                         </Button>
                       )}
-                      {podeConfirmar(item) && (
-                        <Button color={"success"} variant={"contained"}>
+                      {podeConfirmar(diaria) && (
+                        <Button
+                          color={"success"}
+                          variant={"contained"}
+                          onClick={() => setDariaConfirmar(diaria)}
+                        >
                           Confirmar Presença
                         </Button>
                       )}
-                      {podeAvaliar(item) && (
-                        <Button color={"success"} variant={"contained"}>
+                      {podeAvaliar(diaria) && (
+                        <Button
+                          color={"success"}
+                          variant={"contained"}
+                          onClick={() => setDiairaAvaliar(diaria)}
+                        >
                           Avaliar
                         </Button>
                       )}
@@ -122,13 +148,28 @@ const MinhasDiarias: React.FC<PropsWithChildren> = () => {
                   </TableCell>
                   <TableCell>
                     {podeCancelar(item) && (
-                      <Button color={"error"}>Cancelar</Button>
+                      <Button
+                        color={"error"}
+                        onClick={() => setDiariaCancelar(item)}
+                      >
+                        Cancelar
+                      </Button>
                     )}
                     {podeConfirmar(item) && (
-                      <Button color={"success"}>Confirmar Presença</Button>
+                      <Button
+                        color={"success"}
+                        onClick={() => setDariaConfirmar(item)}
+                      >
+                        Confirmar Presença
+                      </Button>
                     )}
                     {podeAvaliar(item) && (
-                      <Button color={"success"}>Avaliar</Button>
+                      <Button
+                        color={"success"}
+                        onClick={() => setDiairaAvaliar(item)}
+                      >
+                        Avaliar
+                      </Button>
                     )}
                   </TableCell>
                 </TableRow>
@@ -143,6 +184,30 @@ const MinhasDiarias: React.FC<PropsWithChildren> = () => {
         )
       ) : (
         <Typography align="center">Nenhuma diária ainda</Typography>
+      )}
+
+      {diariaConfirmar && (
+        <ConfirmDialog
+          diaria={diariaConfirmar}
+          onConfirm={confirmarDiaria}
+          onCancel={() => setDariaConfirmar(undefined)}
+        />
+      )}
+
+      {diariaAvaliar && (
+        <RatingDialog
+          diaria={diariaAvaliar}
+          onConfirm={avaliarDiaria}
+          onCancel={() => setDiairaAvaliar(undefined)}
+        />
+      )}
+
+      {diariaCancelar && (
+        <CancelDialog
+          diaria={diariaCancelar}
+          onConfirm={cancelarDiaria}
+          onCancel={() => setDiariaCancelar(undefined)}
+        />
       )}
     </Container>
   );
