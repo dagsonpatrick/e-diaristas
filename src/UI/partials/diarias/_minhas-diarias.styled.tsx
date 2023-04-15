@@ -19,3 +19,10 @@ export const RatingBox = styled("div")`
     grid-template-columns: 1fr;
   }
 `;
+
+export const ButtonsContainer = styled("div")`
+  display: flex;
+  flex-wrap: wrap;
+  gap: ${({ theme }) => theme.spacing(2)};
+  margin-bottom: ${({ theme }) => theme.spacing(4)};
+`;

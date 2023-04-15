@@ -1,24 +1,61 @@
-import { DiariaInterface } from "data/@types/DiariaInterface";
+import { DiariaInterface, DiariaStatus } from "data/@types/DiariaInterface";
 import { DiariaContext } from "data/contexts/DiariaContext";
 import useIsMobile from "data/hooks/useIsMobile";
 import usePagination from "data/hooks/usePagination.hook";
 import { ApiServiceHateoas, linksResolver } from "data/services/ApiService";
-import { useContext, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import { mutate } from "swr";
+
+type FilterType = "pendentes" | "cancelados" | "avaliados";
 
 export default function useMinhasDiarias() {
   const isMobile = useIsMobile(),
     {
       diariaState: { diarias },
     } = useContext(DiariaContext),
-    filteredData = diarias,
+    [filtro, setFiltro] = useState<FilterType>("pendentes"),
+    filteredData = useMemo(() => {
+      return filtrarDiaria(diarias, filtro);
+    }, [diarias, filtro]),
     { currentPage, setCurrentPage, totalPages, itemsPerPage } = usePagination(
-      diarias,
+      filteredData,
       5
     ),
     [diariaConfirmar, setDariaConfirmar] = useState<DiariaInterface>(),
     [diariaAvaliar, setDiairaAvaliar] = useState<DiariaInterface>(),
     [diariaCancelar, setDiariaCancelar] = useState<DiariaInterface>();
+
+  function filtrarDiaria(
+    diarias: DiariaInterface[],
+    filtro: FilterType
+  ): DiariaInterface[] {
+    return diarias.filter((diaria) => {
+      const avaliadas = [DiariaStatus.AVALIADO].includes(diaria.status ?? 0),
+        cancelado = [
+          DiariaStatus.CANCELADO,
+          DiariaStatus.SEM_PAGAMENTO,
+        ].includes(diaria.status ?? 0),
+        pendente = [
+          DiariaStatus.PAGO,
+          DiariaStatus.CONFIRMADO,
+          DiariaStatus.CONCLUIDO,
+        ].includes(diaria.status ?? 0);
+
+      if (
+        (avaliadas && filtro === "avaliados") ||
+        (cancelado && filtro === "cancelados") ||
+        (pendente && filtro === "pendentes")
+      ) {
+        return true;
+      }
+      return false;
+    });
+  }
+
+  function alterarFiltro(filtro: FilterType) {
+    setCurrentPage(1);
+    setFiltro(filtro);
+  }
 
   function podeVisualizar(diaria: DiariaInterface): boolean {
     return linksResolver(diaria.links, "self") != undefined;
@@ -99,5 +136,8 @@ export default function useMinhasDiarias() {
     diariaCancelar,
     setDiariaCancelar,
     cancelarDiaria,
+    filtro,
+    setFiltro,
+    alterarFiltro,
   };
 }
