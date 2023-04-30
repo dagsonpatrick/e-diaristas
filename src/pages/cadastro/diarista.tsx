@@ -18,7 +18,7 @@ import useIsMobile from "data/hooks/useIsMobile";
 import { FormProvider } from "react-hook-form";
 import { Button, Container, Divider, Paper, Typography } from "@mui/material";
 import { FinancialData } from "UI/components/inputs/UserForm/UserForm.styled";
-import FinalcialForm from "UI/components/inputs/UserForm/forms/FiancialForm";
+import FinancialForm from "UI/components/inputs/UserForm/forms/FiancialForm";
 import NewContactForm from "UI/components/inputs/UserForm/forms/NewContactForm";
 import { CitiesForm } from "UI/components/inputs/UserForm/forms/CitiesForm";
 import Dialog from "UI/components/feedback/Dialog/Dialog";
@@ -101,7 +101,7 @@ const Diarista: React.FC = () => {
                 <Typography sx={{ fontWeight: "bold", pb: 2 }}>
                   Financeiro
                 </Typography>
-                <FinalcialForm />
+                <FinancialForm />
                 <Divider sx={{ mb: 5 }} />
 
                 <Typography sx={{ fontWeight: "bold" }}>

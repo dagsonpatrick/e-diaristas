@@ -10,6 +10,7 @@ export type FormValues = {
     cpf: string;
     telefone: string;
     chave_pix?: string;
+    new_password: string;
   };
 
   pagamento: {

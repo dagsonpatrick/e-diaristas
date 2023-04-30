@@ -18,7 +18,7 @@ ApiService.interceptors.response.use(
       error.response.status === 401 &&
       error.response.data.code === "token_not_valid"
     ) {
-      handleTokenRefresh(error);
+      return handleTokenRefresh(error);
     }
 
     return Promise.reject(error);
